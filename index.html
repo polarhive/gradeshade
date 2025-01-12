@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.simplecss.org/simple.min.css"
+        />
+        <title>Grade Shade</title>
+        <style>
+            #colorBox {
+                width: 100px;
+                height: 100px;
+                border: 1px solid #000;
+            }
+            .error-message {
+                color: red;
+                font-size: 0.9em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <h2>Grade Shade</h2>
+            <form id="gradeForm" onsubmit="submitGrades(event)">
+                <label for="course1">5 Credit Course-1:</label>
+                <input type="text" id="course1" maxlength="1" required />
+                <label for="course2">5 Credit Course-2:</label>
+                <input type="text" id="course2" maxlength="1" required />
+                <label for="course3">4 Credit Course-1:</label>
+                <input type="text" id="course3" maxlength="1" required />
+                <label for="course4">4 Credit Course-2:</label>
+                <input type="text" id="course4" maxlength="1" required />
+                <label for="course5">4 Credit Course-3:</label>
+                <input type="text" id="course5" maxlength="1" required />
+                <label for="course6">2 Credit Course-1:</label>
+                <input type="text" id="course6" maxlength="1" required />
+                <p
+                    class="error-message"
+                    id="errorMessage"
+                    style="display: none"
+                ></p>
+                <br />
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <div class="results-container">
+            <hr />
+            <div id="colorDisplay" style="display: none" aria-live="polite">
+                <p><span id="hexCode"></span></p>
+                <div id="colorBox"></div>
+            </div>
+        </div>
+
+        <script>
+            function submitGrades(event) {
+                event.preventDefault(); // Prevent form from refreshing the page
+
+                // Map grades to their hex equivalents
+                const gradeToHex = {
+                    S: "F",
+                    A: "A",
+                    B: "B",
+                    C: "C",
+                    D: "D",
+                    E: "E",
+                    F: "0",
+                };
+
+                // Validate Inputs
+                const grades = [
+                    "course1",
+                    "course2",
+                    "course3",
+                    "course4",
+                    "course5",
+                    "course6",
+                ].map((id) => document.getElementById(id).value.toUpperCase());
+
+                if (!grades.every((grade) => grade in gradeToHex)) {
+                    const errorMessage =
+                        document.getElementById("errorMessage");
+                    errorMessage.textContent =
+                        "Invalid grades entered. Use S, A, B, C, D, E, or F.";
+                    errorMessage.style.display = "block";
+                    return;
+                }
+
+                // Generate hex code from grades
+                const hexCode = grades
+                    .map((grade) => gradeToHex[grade])
+                    .join("");
+                document.getElementById("hexCode").innerText =
+                    `Hex Code: #${hexCode}`;
+                document.getElementById("colorBox").style.backgroundColor =
+                    `#${hexCode}`;
+                document.getElementById("colorDisplay").style.display = "block";
+                document.getElementById("errorMessage").style.display = "none";
+            }
+        </script>
+    </body>
+</html>
